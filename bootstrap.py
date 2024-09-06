@@ -82,6 +82,8 @@ def main():
     """
 
     task3()
+    #task2()
+    #task1()
 
 def task3():
     # Create a pose estimation model
@@ -95,9 +97,9 @@ def task3():
         while True:
             image = pi_camera.capture_array()
             image.flags.writeable = False
+            
             # get the landmarks
             results = pose.process(image)
-
             if results.pose_landmarks != None:
                 image_with_landmarks = draw_pose(image, results.pose_landmarks)
             else:
@@ -121,7 +123,6 @@ def task2():
 
         # Capture the image from Pi camera
         image = pi_camera.capture_array()
-        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
 
         # get the landmarks
