@@ -41,20 +41,35 @@ def draw_pose(image, landmarks):
 	# get the dimensions of the image
 	height, width, _ = image.shape
 
-	# Get the landmark points and draw on the image
+	# Define landmark connections (pairs of indices to draw lines between)
+	connections = [
+		(11, 12), (12, 14), (14, 16), (16, 20), (16, 18), (20, 18),  # Right arm
+		(11, 13), (13, 15), (15, 19), (15, 17), (19, 17),  # Left arm
+		(23, 24), (24, 26), (26, 28), (28, 30), (30, 32),  # Right leg
+		(23, 25), (25, 27), (27, 29), (29, 31), (31, 27),  # Left leg
+		(11, 23), (12, 24), (0, 1), (1, 2), (2, 3), (3, 7), (0, 4), (4, 5), (5, 6), (6, 8)  # Torso and head
+	]
+
+	# Loop through landmarks and draw circles and lines
 	for idx, landmark in enumerate(landmarks.landmark):
 		x = int(landmark.x * width)
 		y = int(landmark.y * height)
 
-		# Draw a circle on each landmark
+		# Draw a circle at each landmark
 		cv2.circle(landmark_image, (x, y), 5, (0, 255, 0), -1)
 
-		# Optionally draw lines between connected landmarks (e.g. bones/joints)
-		if idx > 0:  # You can define connections based on pose landmark indices
-			prev_landmark = landmarks.landmark[idx - 1]
-			x_prev = int(prev_landmark.x * width)
-			y_prev = int(prev_landmark.y * height)
-			cv2.line(landmark_image, (x_prev, y_prev), (x, y), (255, 0, 0), 2)
+	# Draw lines between connected landmarks
+	for connection in connections:
+		start_idx, end_idx = connection
+		start_landmark = landmarks.landmark[start_idx]
+		end_landmark = landmarks.landmark[end_idx]
+		
+		# Convert landmark positions to pixel coordinates
+		start_point = (int(start_landmark.x * width), int(start_landmark.y * height))
+		end_point = (int(end_landmark.x * width), int(end_landmark.y * height))
+
+		# Draw the line
+		cv2.line(landmark_image, start_point, end_point, (255, 0, 0), 2)
    
 	return landmark_image
 
