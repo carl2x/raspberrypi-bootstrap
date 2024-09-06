@@ -129,7 +129,7 @@ def task2():
 
         if results.pose_landmarks != None:
             result_image = draw_pose(image, results.pose_landmarks)
-            cv2.imwrite("output.png", result_image)
+            cv2.imwrite("task2.png", result_image)
             print(results.pose_landmarks)
         else:
             print("No Pose Detected")
