@@ -81,6 +81,9 @@ def main():
             modify this function further to loop and show a video
     """
 
+    task3()
+
+def task3():
     # Create a pose estimation model
     mp_pose = mp.solutions.pose
 
@@ -88,32 +91,56 @@ def main():
     with mp_pose.Pose(
         min_detection_confidence=0.5, min_tracking_confidence=0.5
     ) as pose:
-        
-        task2 = 0
-        
-        while not task2:
-        
-            # Capture the image from Pi camera
-            image = pi_camera.capture_array()
-            # Convert the image to RGB
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-            # To improve performance, optionally mark the image as not
-            # writeable to pass by reference.
+        cap = cv2.VideoCapture(0)
+
+        while True:
+            ret, frame = cap.read()
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             image.flags.writeable = False
 
             # get the landmarks
             results = pose.process(image)
-            
-            if results.pose_landmarks:
+
+            if results.pose_landmarks != None:
                 image_with_landmarks = draw_pose(image, results.pose_landmarks)
             else:
                 image_with_landmarks = image
-            
-            cv2.imshow("Pose Estimation", image_with_landmarks)
-            
 
-def test():
+            cv2.namedWindow("Pose Estimation", cv2.WINDOW_AUTOSIZE)
+            cv2.imshow("Pose Estimation", image_with_landmarks)
+            if cv2.waitKey(5) & 0xFF == ord("q"):
+                break
+
+    cv2.destroyAllWindows()
+
+
+def task2():
+    # Create a pose estimation model
+    mp_pose = mp.solutions.pose
+
+    # start detecting the poses
+    with mp_pose.Pose(
+        min_detection_confidence=0.5, min_tracking_confidence=0.5
+    ) as pose:
+
+        # Capture the image from Pi camera
+        image = pi_camera.capture_array()
+        # Convert the image to RGB
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image.flags.writeable = False
+
+        # get the landmarks
+        results = pose.process(image)
+
+        if results.pose_landmarks != None:
+            result_image = draw_pose(image, results.pose_landmarks)
+            cv2.imwrite("output.png", result_image)
+            print(results.pose_landmarks)
+        else:
+            print("No Pose Detected")
+
+def task1():
     # Create a pose estimation model
     mp_pose = mp.solutions.pose
 
