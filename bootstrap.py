@@ -81,6 +81,7 @@ def main():
             modify this function further to loop and show a video
     """
 
+    # Run the task
     task3()
     #task2()
     #task1()
