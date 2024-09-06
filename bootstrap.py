@@ -92,13 +92,9 @@ def task3():
         min_detection_confidence=0.5, min_tracking_confidence=0.5
     ) as pose:
 
-        cap = cv2.VideoCapture(0)
-
         while True:
-            ret, image = cap.read()
-            # image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # image.flags.writeable = False
-
+            image = pi_camera.capture_array()
+            image.flags.writeable = False
             # get the landmarks
             results = pose.process(image)
 
@@ -107,8 +103,7 @@ def task3():
             else:
                 image_with_landmarks = image
 
-            cv2.namedWindow("Pose Estimation", cv2.WINDOW_AUTOSIZE)
-            cv2.imshow("Pose Estimation", image_with_landmarks)
+            cv2.imshow("Video", image_with_landmarks)
             if cv2.waitKey(5) & 0xFF == ord("q"):
                 break
 
@@ -126,8 +121,7 @@ def task2():
 
         # Capture the image from Pi camera
         image = pi_camera.capture_array()
-        # Convert the image to RGB
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
 
         # get the landmarks
