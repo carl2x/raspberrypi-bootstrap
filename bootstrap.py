@@ -95,9 +95,9 @@ def task3():
         cap = cv2.VideoCapture(0)
 
         while True:
-            ret, frame = cap.read()
-            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            image.flags.writeable = False
+            ret, image = cap.read()
+            # image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # image.flags.writeable = False
 
             # get the landmarks
             results = pose.process(image)
