@@ -88,15 +88,42 @@ def main():
     with mp_pose.Pose(
         min_detection_confidence=0.5, min_tracking_confidence=0.5
     ) as pose:
+        
+        task2 = 0
+        
+        while not task2:
+        
+            # Capture the image from Pi camera
+            image = pi_camera.capture_array()
+            # Convert the image to RGB
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+            # To improve performance, optionally mark the image as not
+            # writeable to pass by reference.
+            image.flags.writeable = False
+
+            # get the landmarks
+            results = pose.process(image)
+            
+            if results.pose_landmarks:
+                image_with_landmarks = draw_pose(image, results.pose_landmarks)
+            else:
+                image_with_landmarks = image
+            
+            cv2.imshow("Pose Estimation", image_with_landmarks)
+            
+
+def test():
+    # Create a pose estimation model
+    mp_pose = mp.solutions.pose
+
+    # start detecting the poses
+    with mp_pose.Pose(
+        min_detection_confidence=0.5, min_tracking_confidence=0.5
+    ) as pose:
 
         # load test image
-        # image = cv2.imread("person.png")
-        
-        # Task 2
-        # Capture the image from Pi camera
-        image = pi_camera.capture_array()
-        # Convert the image to RGB
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.imread("person.png")
 
         # To improve performance, optionally mark the image as not
         # writeable to pass by reference.
